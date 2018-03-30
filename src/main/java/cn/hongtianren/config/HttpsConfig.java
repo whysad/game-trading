@@ -26,4 +26,15 @@ public class HttpsConfig {
         };
         return tomcat;
     }
+    
+
+    @Bean
+    public Connector httpConnector(){
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(80);
+        connector.setSecure(false);
+        connector.setRedirectPort(443);//自动重定向到443端口
+        return connector;
+    }
 }

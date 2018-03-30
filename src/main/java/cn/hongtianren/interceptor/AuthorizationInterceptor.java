@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.hongtianren.entity.Admin;
-import cn.hongtianren.mapper.AdminMapper;
+import cn.hongtianren.entity.User;
+import cn.hongtianren.mapper.UserMapper;
 
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
 	@Autowired
-	private AdminMapper adminMapper;
+	private UserMapper userMapper;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -22,8 +22,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("name") == null) {
 			String username = (String)request.getAttribute("username");
-			Admin admin = adminMapper.findAdmin(username);
-			request.setAttribute("name", admin.getName());;
+			User user = userMapper.loadUserBasicByUsername(username);
+			request.setAttribute("name", user.getUsername());
 		}
 		return true;
 	}

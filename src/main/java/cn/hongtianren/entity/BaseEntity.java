@@ -19,9 +19,9 @@ public class BaseEntity implements Serializable {
 
 	private Long id;
 	/** 创建时间 */
-	private Date create;
+	private Date createTime;
 	/** 修改时间 */
-	private Date modifyed;
+	private Date updateTime;
 
 	public BaseEntity() {
 
@@ -35,20 +35,20 @@ public class BaseEntity implements Serializable {
 		this.id = id;
 	}
 
-	public Date getCreate() {
-		return create;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setCreate(Date create) {
-		this.create = create;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public Date getModifyed() {
-		return modifyed;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setModifyed(Date modifyed) {
-		this.modifyed = modifyed;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }
