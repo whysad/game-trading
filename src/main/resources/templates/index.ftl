@@ -41,19 +41,31 @@
 </div>
 <div title="菜单" data-options="region:'west',iconCls:'fa fa-list',collapsible:false" style="width: 200px">
   <div class="easyui-accordion" data-options="multiple:true">
-		<div title="Language" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
-			<p>A programming language is a formal language designed to communicate instructions to a machine, particularly a computer. Programming languages can be used to create programs that control the behavior of a machine and/or to express algorithms precisely.</p>
+		<div title="商城管理" data-options="iconCls:'icon-tip'" style="overflow:auto;padding:10px;">
+			<ul class="crm-menu">
+				<li onClick="">我要买</li>
+				<li onClick="">我要卖</li>
+			</ul>
 		</div>
-		<div title="Java" style="padding:10px;">
-			<p>Java (Indonesian: Jawa) is an island of Indonesia. With a population of 135 million (excluding the 3.6 million on the island of Madura which is administered as part of the provinces of Java), Java is the world's most populous island, and one of the most densely populated places in the world.</p>
+		<div title="用户管理" style="padding:10px;" data-options="iconCls:'icon-man'">
+			<ul class="crm-menu">
+				<li onClick="">修改信息</li>
+				<li onClick="">修改密码</li>
+			</ul>
 		</div>
-		<div title="C#" style="padding:10px;">
-			<p>C# is a multi-paradigm programming language encompassing strong typing, imperative, declarative, functional, generic, object-oriented (class-based), and component-oriented programming disciplines.</p>
+		<div title="订单管理" style="padding:10px;" data-options="iconCls:'icon-sum'">
+			<ul class="crm-menu">
+				<li onClick="">我的订单</li>
+				<li onClick="">订单跟踪</li>
+			</ul>
 		</div>
-		<div title="Ruby" style="padding:10px;">
-			<p>A dynamic, reflective, general-purpose object-oriented programming language.</p>
+		<div title="充值管理" style="padding:10px;" data-options="iconCls:'icon-more'">
+			<ul class="crm-menu">
+				<li onClick="">充值记录</li>
+				<li onClick="">会员充值</li>
+			</ul>
 		</div>
-		<div title="Fortran" style="padding:10px;">
+		<div title="关于" style="padding:10px;" data-options="iconCls:'icon-help'">
 			<p>Fortran (previously FORTRAN) is a general-purpose, imperative programming language that is especially suited to numeric computation and scientific computing.</p>
 		</div>
   </div>

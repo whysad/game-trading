@@ -1,11 +1,15 @@
 package cn.hongtianren.controller;
 
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,34 +18,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.hongtianren.entity.User;
+import cn.hongtianren.service.UserService;
+import cn.hongtianren.util.PasswordUtil;
 
 @Controller
 public class PageController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PageController.class);
 
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("/login")
 	public String loginPage() {
 		return "login";
 	}
-	
+
 	@GetMapping("/register")
-	public String register(){
+	public String register() {
 		return "register";
 	}
-	
+
 	@GetMapping("/page/{url}")
-	public String page(@PathVariable("url") String url){
+	public String page(@PathVariable("url") String url) {
 		return url;
 	}
-	
+
 	@PostMapping("/login")
-	public String login(User user, RedirectAttributes attributes) {
+	public String login(User user, RedirectAttributes attributes, HttpSession session) {
 		if (user.getUsername() == null) {
 			return "login";
 		}
 		UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getUsername(),
-				user.getPassword());
+				PasswordUtil.MD5(user.getPassword()));
 		Subject subject = SecurityUtils.getSubject();
 		try {
 			subject.login(usernamePasswordToken);
@@ -50,11 +59,42 @@ public class PageController {
 			attributes.addFlashAttribute("message", "用户名或密码不正确");
 		}
 		if (subject.isAuthenticated()) {
+			session.setAttribute("name", subject.getPrincipal());
 			return "redirect:/page/index";
 		} else {
 			usernamePasswordToken.clear();
 			return "redirect:/login";
 		}
+	}
+
+	@PostMapping("/register")
+	public String register(User user, String validPassword, RedirectAttributes attributes) {
+		if (!validPassword.equals(user.getPassword())) {
+			attributes.addFlashAttribute("registerMessage", "密码不匹配");
+			return "redirect:/register";
+		}
+		String phoneRegex = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
+		if (!Pattern.matches(phoneRegex, user.getPhone())) {
+			attributes.addFlashAttribute("registerMessage", "电话格式不正确");
+			return "redirect:/register";
+		}
+		String emailRegex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+		if (!Pattern.matches(emailRegex, user.getEmail())) {
+			attributes.addFlashAttribute("registerMessage", "邮箱格式不正确");
+			return "redirect:/register";
+		}
+		if (userService.register(user)) {
+			return "redirect:/page/index";
+		} else {
+			attributes.addFlashAttribute("registerMessage", "注册失败，请检查注册信息是否正确");
+			return "redirect:/register";
+		}
+
+	}
+
+	@GetMapping("/index")
+	public String index() {
+		return "index";
 	}
 
 	@GetMapping("/logout")

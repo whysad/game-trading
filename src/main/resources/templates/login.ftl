@@ -12,7 +12,7 @@
   <form action="login" method="post" autocomplete="off">
     <div class="input_outer">
       <i class="fa fa-user-o u_user"></i>
-      <input required="required" name="username" class="text" placeholder="输入账号" type="text">
+      <input required="required" name="username" class="text" placeholder="输入账号/邮箱/手机号" type="text">
     </div>
     <div class="input_outer">
       <i class="fa fa-eye u_user"></i>

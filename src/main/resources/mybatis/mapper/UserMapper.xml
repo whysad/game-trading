@@ -46,4 +46,20 @@
 		or email = #{username} 
 		or phone = #{username}
 	</select>
+	
+	<insert id="register" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+		insert into user (create_time, update_time, 
+	      username, password, phone, 
+	      email)
+	    values ( #{createTime}, #{updateTime}, 
+	      #{username}, #{password}, #{phone}, 
+	      #{email})
+	</insert>
+	
+	<insert id="setUpRole">
+		INSERT INTO r_user_role (`user`, role)
+			VALUES
+				(#{user},#{role})
+	</insert>
+	
 </mapper>

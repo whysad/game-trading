@@ -20,6 +20,7 @@ import org.springframework.context.annotation.DependsOn;
 import cn.hongtianren.realm.MyShiroRealm;
 
 import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.credential.Md5CredentialsMatcher;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -42,7 +43,7 @@ public class ShiroConfiguration {
 	        //要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面
 	        shiroFilterFactoryBean.setLoginUrl("/login");
 	        //登录成功后要跳转的连接,逻辑也可以自定义，例如返回上次请求的页面
-	        shiroFilterFactoryBean.setSuccessUrl("/page/index");
+	        shiroFilterFactoryBean.setSuccessUrl("/index");
 	        //用户访问未对其授权的资源时,所显示的连接
 	        shiroFilterFactoryBean.setUnauthorizedUrl("/page/403");
 
@@ -60,6 +61,7 @@ public class ShiroConfiguration {
 	        filterChainDefinitionMap.put("/font-awesome/**", "anon");
 	        filterChainDefinitionMap.put("/easyui/**", "anon");
 	        filterChainDefinitionMap.put("/page/403", "anon");
+	        filterChainDefinitionMap.put("/index", "anon");
 	        filterChainDefinitionMap.put("/login", "anon");//anon 可以理解为不拦截
 	        filterChainDefinitionMap.put("/**", "user");
 
@@ -83,10 +85,10 @@ public class ShiroConfiguration {
 	    public SecurityManager securityManager(MyShiroRealm myShiroRealm) {
 	        logger.info("注入Shiro的Web过滤器-->securityManager", ShiroFilterFactoryBean.class);
 	        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-	        //myShiroRealm.setCredentialsMatcher(new Md5CredentialsMatcher());
+	        //myShiroRealm.setCredentialsMatcher(new HashedCredentialsMatcher());
 	        securityManager.setRealm(myShiroRealm);
 	        securityManager.setCacheManager(ehCacheManager());
-	        //securityManager.setRememberMeManager(cookieRememberMeManager());
+	        securityManager.setRememberMeManager(cookieRememberMeManager());
 	        return securityManager;
 	    }
 	    
