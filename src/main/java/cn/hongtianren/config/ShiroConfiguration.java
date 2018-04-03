@@ -2,6 +2,7 @@ package cn.hongtianren.config;
 
 import java.util.LinkedHashMap;
 
+
 import java.util.Map;
 
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -13,23 +14,21 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
+import cn.hongtianren.mapper.UserMapper;
 import cn.hongtianren.realm.MyShiroRealm;
-
-import org.apache.commons.codec.digest.Md5Crypt;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.authc.credential.Md5CredentialsMatcher;
-import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 
 @Configuration
 public class ShiroConfiguration {
 	 private static final Logger logger = LoggerFactory.getLogger(ShiroConfiguration.class);
-
+	 
+	 @Autowired
+	 private UserMapper userMapper;
 	    /**
 	     * Shiro的Web过滤器Factory 命名:shiroFilter<br /> * * @param securityManager * @return
 	     */
@@ -53,17 +52,22 @@ public class ShiroConfiguration {
 
 	        // <!-- 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
 	        // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-	        filterChainDefinitionMap.put("/css/**", "anon");
-	        filterChainDefinitionMap.put("/druid/**", "anon");
-	        filterChainDefinitionMap.put("/register", "anon");
-	        filterChainDefinitionMap.put("/images/**", "anon");
-	        filterChainDefinitionMap.put("/js/**", "anon");
-	        filterChainDefinitionMap.put("/font-awesome/**", "anon");
-	        filterChainDefinitionMap.put("/easyui/**", "anon");
+//	        filterChainDefinitionMap.put("/css/**", "anon");
+//	        filterChainDefinitionMap.put("/druid/**", "anon");
+//	        filterChainDefinitionMap.put("/register", "anon");
+//	        filterChainDefinitionMap.put("/images/**", "anon");
+//	        filterChainDefinitionMap.put("/js/**", "anon");
+//	        filterChainDefinitionMap.put("/font-awesome/**", "anon");
+//	        filterChainDefinitionMap.put("/easyui/**", "anon");
 	        filterChainDefinitionMap.put("/page/403", "anon");
-	        filterChainDefinitionMap.put("/index", "anon");
-	        filterChainDefinitionMap.put("/login", "anon");//anon 可以理解为不拦截
-	        filterChainDefinitionMap.put("/**", "user");
+	        filterChainDefinitionMap.put("/api/game/**", "anon");
+//	        filterChainDefinitionMap.put("/index", "anon");
+//	        filterChainDefinitionMap.put("/desktop", "anon");
+	        filterChainDefinitionMap.put("/page/help/**", "anon");
+//	        filterChainDefinitionMap.put("/login", "anon");//anon 可以理解为不拦截
+	        filterChainDefinitionMap.put("/page/**", "user");
+	        filterChainDefinitionMap.put("/api/**", "user");
+	        
 
 	        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 

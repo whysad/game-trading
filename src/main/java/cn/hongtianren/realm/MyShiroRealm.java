@@ -35,7 +35,7 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String currentLoginName = (String) principals.getPrimaryPrincipal();
+        String currentLoginName = ((User) principals.getPrimaryPrincipal()).getUsername();
         //从数据库中获取当前登录用户的详细信息
        User user = userMapper.loadUserByUsername(currentLoginName);
         if (null == user) {
@@ -61,7 +61,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         User user = userMapper.loadUserBasicByUsername(token.getUsername());
         if (user != null) {
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-            return new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(), getName());
+            return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
         }
         return null;
     }

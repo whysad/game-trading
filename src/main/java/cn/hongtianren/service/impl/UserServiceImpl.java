@@ -1,5 +1,6 @@
 package cn.hongtianren.service.impl;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 
@@ -29,13 +30,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	@Override
-	public boolean register(User user) {
+	public boolean register(User user) throws SQLException{
 		user.setPassword(PasswordUtil.MD5(user.getPassword()));
 		Date date = new Date();
 		user.setCreateTime(date);
 		user.setUpdateTime(date);
 		Subject subject = SecurityUtils.getSubject();
-		try{
 			//注册
 			userMapper.register(user);
 			//设置默认角色
@@ -44,11 +44,29 @@ public class UserServiceImpl implements UserService {
 			subject.logout();
 		}
 		subject.login(new UsernamePasswordToken(user.getUsername(), user.getPassword()));
-		}catch(Exception e){
-			logger.error(e.getMessage());
-			return false;
-		}
 		return true;
+		
+	}
+
+	@Override
+	public void updateUser(User user) {
+		Date date = new Date();
+		user.setLastLoginDate(date);
+		user.setUpdateTime(date);
+		userMapper.update(user);
+	}
+
+	@Override
+	@Transactional
+	public void create(User user, int role) throws SQLException {
+		user.setPassword(PasswordUtil.MD5(user.getPassword()));
+		Date date = new Date();
+		user.setCreateTime(date);
+		user.setUpdateTime(date);
+		//注册
+		userMapper.register(user);
+		//设置角色
+		userMapper.setUpRole(user.getId(),role);
 	}
 
 }

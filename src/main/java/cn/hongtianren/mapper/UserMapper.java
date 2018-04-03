@@ -1,5 +1,8 @@
 package cn.hongtianren.mapper;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,7 +42,7 @@ public interface UserMapper {
 	 * @param user
 	 *            用户信息
 	 */
-	void register(User user);
+	void register(User user) throws SQLException;
 	
 	/**
 	 * 设置默认角色
@@ -47,4 +50,17 @@ public interface UserMapper {
 	 * @param role 角色id
 	 */
 	void setUpRole(@Param("user")Long user,@Param("role") int role);
+	
+	/**
+	 * 根据角色获取用户
+	 * @param roles 角色
+	 * @return
+	 */
+	List<User> getUsersByRole(@Param("roles") List<Integer> roles);
+	
+	/**
+	 * 更新用户信息
+	 * @param user 用户信息
+	 */
+	void update(User user);
 }

@@ -1,7 +1,10 @@
 package cn.hongtianren.controller;
 
+import java.sql.SQLException;
+
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
@@ -39,13 +42,13 @@ public class PageController {
 		return "register";
 	}
 
-	@GetMapping("/page/{url}")
-	public String page(@PathVariable("url") String url) {
-		return url;
+	@GetMapping("/page/**")
+	public String page(HttpServletRequest request) {
+		return request.getRequestURI().replaceAll("/page", "");
 	}
 
 	@PostMapping("/login")
-	public String login(User user, RedirectAttributes attributes, HttpSession session) {
+	public String login(User user, RedirectAttributes attributes,HttpServletRequest request) {
 		if (user.getUsername() == null) {
 			return "login";
 		}
@@ -59,8 +62,11 @@ public class PageController {
 			attributes.addFlashAttribute("message", "用户名或密码不正确");
 		}
 		if (subject.isAuthenticated()) {
-			session.setAttribute("name", subject.getPrincipal());
-			return "redirect:/page/index";
+			User updateUser = new User();
+			updateUser.setId(((User)subject.getPrincipal()).getId());
+			updateUser.setLastLoginIp(request.getRemoteAddr());
+			userService.updateUser(updateUser);
+			return "redirect:/index";
 		} else {
 			usernamePasswordToken.clear();
 			return "redirect:/login";
@@ -83,13 +89,16 @@ public class PageController {
 			attributes.addFlashAttribute("registerMessage", "邮箱格式不正确");
 			return "redirect:/register";
 		}
-		if (userService.register(user)) {
-			return "redirect:/page/index";
-		} else {
+		String result = "redirect:/register";
+		try {
+			userService.register(user);
+			result =  "redirect:/index";
+		} catch (SQLException e) {
+			attributes.addFlashAttribute("registerMessage", "用户名已存在");
+		}catch (Exception e) {
 			attributes.addFlashAttribute("registerMessage", "注册失败，请检查注册信息是否正确");
-			return "redirect:/register";
 		}
-
+		return result;
 	}
 
 	@GetMapping("/index")

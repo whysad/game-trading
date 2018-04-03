@@ -56,10 +56,57 @@
 	      #{email})
 	</insert>
 	
+	<!-- 设置用户角色 -->
 	<insert id="setUpRole">
 		INSERT INTO r_user_role (`user`, role)
 			VALUES
 				(#{user},#{role})
 	</insert>
+	
+	<!-- 根据角色获取用户 -->
+	<select id="getUsersByRole" resultType="User">
+		SELECT
+			u.*
+		FROM
+			`user` u
+		LEFT JOIN r_user_role rur ON u.id = rur.`user`
+		<foreach collection="roles" item="role" open="where rur.role IN (" close=")" separator=",">
+			#{role}
+		</foreach>
+	</select>
+	
+	<update id="update" parameterType="User">
+    update user
+    <set>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="username != null">
+        username = #{username},
+      </if>
+      <if test="password != null">
+        password = #{password},
+      </if>
+      <if test="phone != null">
+        phone = #{phone},
+      </if>
+      <if test="email != null">
+        email = #{email},
+      </if>
+      <if test="lastLoginDate != null">
+        last_login_date = #{lastLoginDate},
+      </if>
+      <if test="lastLoginIp != null">
+        last_login_ip = #{lastLoginIp},
+      </if>
+      <if test="balance != null">
+        balance = #{balance},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 	
 </mapper>

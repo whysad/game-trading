@@ -34,44 +34,84 @@
 -o-background-size: cover;">
 <div data-options="region:'north'" style="height: 70px;overflow: hidden;padding: 0 10px;">
   <div class="user-info">
-    <span class="item" id="public_change_info"><i class="fa fa-user"></i>${name!'<a href="/login">请登录</a>'}</span>
-    <a class="item" href="/logout"><i class="fa fa-sign-out"></i> 注销</a>
+    <span class="item" id="public_change_info"><i class="fa fa-user"></i><@shiro.user><@shiro.principal property="username"/>&nbsp;余额：	￥<@shiro.principal property="balance"/></span>
+    <a class="item" href="/logout"><i class="fa fa-sign-out"></i> 注销</a></@shiro.user>
+    <@shiro.guest><a href="/login">登录</a></span><a class="item" href="/register"><i class="fa fa-registered"></i> 注册</a></@shiro.guest>
   </div>
   <h1>币易</h1>
 </div>
 <div title="菜单" data-options="region:'west',iconCls:'fa fa-list',collapsible:false" style="width: 200px">
   <div class="easyui-accordion" data-options="multiple:true">
-		<div title="商城管理" data-options="iconCls:'icon-tip'" style="overflow:auto;padding:10px;">
+  		<@shiro.hasPermission name="page:mall">
+			<div title="商城管理" data-options="iconCls:'icon-tip'" style="overflow:auto;padding:10px;">
+				<ul class="crm-menu">
+				<@shiro.hasPermission name="action:mall:buy">
+					<li onClick="">我要买</li>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="action:mall:sell">
+					<li onClick="">我要卖</li>
+				</@shiro.hasPermission>
+				</ul>
+			</div>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="page:user">
+			<div title="用户管理" style="padding:10px;" data-options="iconCls:'icon-man'">
+				<ul class="crm-menu">
+					<@shiro.hasPermission name="action:user:basic">
+						<li onClick="">修改信息</li>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="action:user:password">
+						<li onClick="">修改密码</li>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="action:user:show">
+						<li onClick="">查看用户</li>
+					</@shiro.hasPermission>
+				</ul>
+			</div>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="page:order">
+			<div title="订单管理" style="padding:10px;" data-options="iconCls:'icon-sum'">
+				<ul class="crm-menu">
+					<@shiro.hasPermission name="action:order:show">
+						<li onClick="openTabs('我的订单','/page/order/order_my')">我的订单</li>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="action:order:track">
+						<li onClick="openTabs('订单跟踪','/page/order/order_track')">订单跟踪</li>
+					</@shiro.hasPermission>
+				</ul>
+			</div>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="page:recharge">
+			<div title="充值管理" style="padding:10px;" data-options="iconCls:'icon-more'">
+				<ul class="crm-menu">
+					<@shiro.hasPermission name="action:recharge:record">
+						<li onClick="">充值记录</li>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="action:recharge:member">
+						<li onClick="">会员充值</li>
+					</@shiro.hasPermission>
+				</ul>
+			</div>
+		</@shiro.hasPermission>
+		<@shiro.hasPermission name="page:game">
+			<div title="游戏管理" style="padding:10px;" data-options="iconCls:'icon-filter'">
+				<ul class="crm-menu">
+					<@shiro.hasPermission name="action:game:area">
+						<li onClick="openTabs('区服添加','/page/game/save_game_area')">区服添加</li>
+					</@shiro.hasPermission>
+				</ul>
+			</div>
+		</@shiro.hasPermission>
+		<div title="帮助" style="padding:10px;" data-options="iconCls:'icon-help'">
 			<ul class="crm-menu">
-				<li onClick="">我要买</li>
-				<li onClick="">我要卖</li>
+				<li onClick="openTabs('币易是什么','/page/help/help_what')">币易是什么</li>
+				<li onClick="openTabs('币易能做什么','/page/help/help_how')">币易能做什么</li>
 			</ul>
-		</div>
-		<div title="用户管理" style="padding:10px;" data-options="iconCls:'icon-man'">
-			<ul class="crm-menu">
-				<li onClick="">修改信息</li>
-				<li onClick="">修改密码</li>
-			</ul>
-		</div>
-		<div title="订单管理" style="padding:10px;" data-options="iconCls:'icon-sum'">
-			<ul class="crm-menu">
-				<li onClick="">我的订单</li>
-				<li onClick="">订单跟踪</li>
-			</ul>
-		</div>
-		<div title="充值管理" style="padding:10px;" data-options="iconCls:'icon-more'">
-			<ul class="crm-menu">
-				<li onClick="">充值记录</li>
-				<li onClick="">会员充值</li>
-			</ul>
-		</div>
-		<div title="关于" style="padding:10px;" data-options="iconCls:'icon-help'">
-			<p>Fortran (previously FORTRAN) is a general-purpose, imperative programming language that is especially suited to numeric computation and scientific computing.</p>
 		</div>
   </div>
 </div>
 <div id="myTabs" class="easyui-tabs" data-options="region:'center'">
-	<div title="主页" data-options="href:'/desktop',closable:true" style="padding:20px;display:none;">
+	<div title="主页" data-options="href:'/desktop',closable:false" style="padding:20px;display:none;">
 		
     </div>
 </div>
@@ -82,7 +122,6 @@
 	  		$('#myTabs').tabs('add',{
 				title: title,
 				href:href,
-				iconCls:'icon-reload',
 				closable:true
 			});
 		}else{
