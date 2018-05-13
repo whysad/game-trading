@@ -152,6 +152,38 @@
     		return value;
     	}
     }
+    
+	function parseUnit(value){
+			if(value == 0){
+				return '个';
+			}else if(value == 1){
+				return '万个';
+			}else{
+				return '百万个'
+			}
+		}
+	function parseOrderType(value){
+		if(value == 0){
+			return "sell";
+		}else if(value == 1){
+			return "buy";
+		}else{
+			return "-";
+		}
+	}
+	function parseOrderStatus(value){
+		if(value == 0){
+			return "待确认";
+		}else if(value == 1){
+			return "已确认";
+		}else if(value == 2){
+			return "未通过";
+		}else if(value == 3){
+			return "已取消";
+		}else{
+			return "-";
+		}
+	}
  </script>
 </body>
 </html>

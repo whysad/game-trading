@@ -10,17 +10,6 @@
 			<th data-options="field:'gameCurrencyUnit',width:50,formatter:parseUnit">单位</th>
 		</tr>
     </thead>
-    <script>
-    	function parseUnit(value){
-				if(value == 0){
-					return '个';
-				}else if(value == 1){
-					return '万个';
-				}else{
-					return '百万个'
-				}
-			}
-    </script>
 </table>
 <div id="dg-game-tool">
 	<label for="index-gameBase">游戏：</label><input id="index-gameBase" class="easyui-combobox" name="gameBase" required="true" data-options="url:'/api/game',

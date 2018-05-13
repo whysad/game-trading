@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hongtianren.mapper.GameMapper">
+	<insert id="create" parameterType="Game">
+		insert into game_base (create_time, update_time,
+		name, game_category, image_url,
+		description, supplier)
+		values (#{createTime}, #{updateTime},
+		#{name}, #{gameCategory}, #{imageUrl},
+		#{description}, #{supplier})
+	</insert>
+	
+	<select id="getGameCurrency" resultType="GameCurrency">
+		select gc.*
+		from game_currency gc
+		inner join game_area ga ON gc.game_area = ga.id
+		<if test="gameArea!=null">
+		 and gc.game_area = #{gameArea} 
+		</if>
+		inner join game_server gs ON ga.game_server = gs.id
+		<if test="gameServer!=null">
+		 and ga.game_server = #{gameServer} 
+		</if>
+		inner join game_base gb ON gs.game_base = gb.id
+		<if test="gameBase!=null">
+		 and gs.game_base = #{gameBase}
+		</if>
+		<if test="word!=null">
+			where gc.game_name like CONCAT('%',#{word},'%') 
+			or gc.game_server_name like CONCAT('%',#{word},'%') 
+			or gc.game_area_name like CONCAT('%',#{word},'%') 
+		</if>
+	</select>
+	
+	<insert id="saveServer" parameterType="GameServer">
+		insert into game_server
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="gameBase != null" >
+        game_base,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="gameBase != null" >
+        #{gameBase},
+      </if>
+      <if test="description != null" >
+        #{description},
+      </if>
+    </trim>
+	</insert>
+	
+	<insert id="saveArea" parameterType="GameArea" useGeneratedKeys="true" keyProperty="id">
+		insert into game_area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="gameServer != null" >
+        game_server,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="gameServer != null" >
+        #{gameServer},
+      </if>
+      <if test="description != null" >
+        #{description},
+      </if>
+    </trim>
+	</insert>
+	
+	<select id="getAreaById" resultType="GameAreaVo">
+		SELECT
+			ga.*, gs.`name` AS serverName,
+			gb.`name` AS gameName
+		FROM
+			game_area ga
+		INNER JOIN game_server gs ON ga.game_server = gs.id
+		AND ga.id = #{area}
+		INNER JOIN game_base gb ON gs.game_base = gb.id
+	</select>
+	
+	<insert id="saveCurrency" parameterType="GameCurrency" >
+    insert into game_currency
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="gameArea != null" >
+        game_area,
+      </if>
+      <if test="gameCurrencyStock != null" >
+        game_currency_stock,
+      </if>
+      <if test="gameCurrencyTotalPrice != null" >
+        game_currency_total_price,
+      </if>
+      <if test="gameCurrencyUnitPrice != null" >
+        game_currency_unit_price,
+      </if>
+      <if test="gameCurrencyUnit != null" >
+        game_currency_unit,
+      </if>
+      <if test="gameName != null" >
+        game_name,
+      </if>
+      <if test="gameServerName != null" >
+        game_server_name,
+      </if>
+      <if test="gameAreaName != null" >
+        game_area_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="gameArea != null" >
+        #{gameArea},
+      </if>
+      <if test="gameCurrencyStock != null" >
+        #{gameCurrencyStock},
+      </if>
+      <if test="gameCurrencyTotalPrice != null" >
+        #{gameCurrencyTotalPrice},
+      </if>
+      <if test="gameCurrencyUnitPrice != null" >
+        #{gameCurrencyUnitPrice},
+      </if>
+      <if test="gameCurrencyUnit != null" >
+        #{gameCurrencyUnit},
+      </if>
+      <if test="gameName != null" >
+        #{gameName},
+      </if>
+      <if test="gameServerName != null" >
+        #{gameServerName},
+      </if>
+      <if test="gameAreaName != null" >
+        #{gameAreaName},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>
